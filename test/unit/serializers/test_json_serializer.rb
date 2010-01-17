@@ -30,7 +30,7 @@ class JsonSerializationTest < Test::Unit::TestCase
   
   should "include demodulized root" do
     Contact.include_root_in_json = true
-    assert_match %r{^\{"contact": \{}, @contact.to_json
+    assert_match %r{^\{"contact":[ ]?\{}, @contact.to_json
   end
   
   should "encode all encodable attributes" do

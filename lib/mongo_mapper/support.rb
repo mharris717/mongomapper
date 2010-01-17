@@ -133,6 +133,8 @@ class ObjectId
       nil
     elsif value.is_a?(Mongo::ObjectID)
       value
+    elsif value.is_a?(Hash)
+      Mongo::ObjectID.new(value['data'])
     else
       Mongo::ObjectID.from_string(value.to_s)
     end
