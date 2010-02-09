@@ -68,7 +68,7 @@ module MongoMapper
       end
 
       def find_each(options={})
-        criteria, options = to_finder_options(options)
+        criteria, options = to_query(options)
         collection.find(criteria, options).each do |doc|
           yield load(doc)
         end
@@ -291,7 +291,7 @@ module MongoMapper
 
         # All query methods that load documents pass through find_one or find_many
         def find_one(options={})
-          criteria, options = to_finder_options(options)
+          criteria, options = to_query(options)
           if doc = collection.find_one(criteria, options)
             load(doc)
           end
@@ -299,7 +299,7 @@ module MongoMapper
 
         # All query methods that load documents pass through find_one or find_many
         def find_many(options)
-          criteria, options = to_finder_options(options)
+          criteria, options = to_query(options)
           collection.find(criteria, options).to_a.map do |doc|
             load(doc)
           end
@@ -338,11 +338,11 @@ module MongoMapper
         end
 
         def to_criteria(options={})
-          FinderOptions.new(self, options).criteria
+          Query.new(self, options).criteria
         end
 
-        def to_finder_options(options={})
-          FinderOptions.new(self, options).to_a
+        def to_query(options={})
+          Query.new(self, options).to_a
         end
     end
 

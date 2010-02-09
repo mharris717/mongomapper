@@ -1,20 +1,21 @@
 module MongoMapper
   # = Important Note
-  # This class is private to MongoMapper and should not be considered part of 
+  # This class is private to MongoMapper and should not be considered part of
   # MongoMapper's public API.
   #
-  class FinderOptions
+  class Query
     OptionKeys = [:fields, :select, :skip, :offset, :limit, :sort, :order]
+
+    attr_reader :model
 
     def initialize(model, options)
       raise ArgumentError, "Options must be a hash" unless options.is_a?(Hash)
 
-      @model      = model
-      @options    = {}
-      @conditions = {}
+      @model, @options, @conditions = model, {}, {}
 
       options.each_pair do |key, value|
         key = key.respond_to?(:to_sym) ? key.to_sym : key
+
         if OptionKeys.include?(key)
           @options[key] = value
         elsif key == :conditions
@@ -47,7 +48,7 @@ module MongoMapper
     private
       # adds _type single collection inheritance scope for models that need it
       def add_sci_scope
-        @conditions[:_type] = @model.to_s if @model.single_collection_inherited?
+        @conditions[:_type] = model.to_s if model.single_collection_inherited?
       end
 
       def modifier?(field)
@@ -63,16 +64,16 @@ module MongoMapper
 
         conditions.each_pair do |key, value|
           key = normalized_key(key)
-          
-          if @model.object_id_key?(key) && value.is_a?(String)
+
+          if model.object_id_key?(key) && value.is_a?(String)
             value = Mongo::ObjectID.from_string(value)
           end
-          
+
           if symbol_operator?(key)
             value = {"$#{key.operator}" => value}
             key = normalized_key(key.field)
           end
-          
+
           criteria[key] = normalized_value(key, value)
         end
 
