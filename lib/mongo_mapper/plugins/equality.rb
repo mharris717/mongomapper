@@ -1,6 +1,7 @@
 module MongoMapper
   module Plugins
     module Equality
+      extend ActiveSupport::Concern
       module InstanceMethods
         def ==(other)
           other.is_a?(self.class) && _id == other._id

@@ -1,6 +1,8 @@
 module MongoMapper
   module Plugins
     module Pagination
+      extend ActiveSupport::Concern
+      
       module ClassMethods
         def per_page
           25

@@ -1,6 +1,7 @@
 module MongoMapper
   module Plugins
     module Associations
+      extend ActiveSupport::Concern
       module ClassMethods
         def belongs_to(association_id, options={}, &extension)
           create_association(:belongs_to, association_id, options, &extension)

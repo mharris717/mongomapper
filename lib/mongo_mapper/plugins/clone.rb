@@ -1,6 +1,7 @@
 module MongoMapper
   module Plugins
     module Clone
+      extend ActiveSupport::Concern
       module InstanceMethods
         def clone
           clone_attributes = self.attributes

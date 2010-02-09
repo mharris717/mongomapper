@@ -5,14 +5,24 @@ require 'set'
 # so i want to make sure that if you are using gems you do in fact have the correct versions
 # if there is a better way to do this, please enlighten me!
 if self.class.const_defined?(:Gem)
-  gem 'activesupport', '>= 2.3'
-  gem 'mongo', '0.18.3'
-  gem 'jnunemaker-validatable', '1.8.1'
+  gem 'activesupport', '>= 3.0.pre'
+  gem "activemodel", ">= 3.0.pre"
+  gem "mongo", ">= 0.18.2"
 end
 
-require 'active_support'
+require 'active_support/hash_with_indifferent_access'
+require "active_model"
+require "active_model/callbacks"
+require "active_model/conversion"
+require "active_model/deprecated_error_methods"
+require "active_model/errors"
+require "active_model/naming"
+require "active_model/serialization"
+require "active_model/translation"
+require "active_model/validator"
+require "active_model/validations"
+
 require 'mongo'
-require 'validatable'
 
 module MongoMapper
   # generic MM error

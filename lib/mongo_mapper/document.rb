@@ -1,33 +1,30 @@
 module MongoMapper
   module Document
     extend Support::DescendantAppends
+    extend ActiveSupport::Concern
+    
+    included do
+      include InstanceMethods
+      extend  Support::Find
+      extend  ClassMethods
+      extend  Plugins
 
-    def self.included(model)
-      model.class_eval do
-        include InstanceMethods
-        extend  Support::Find
-        extend  ClassMethods
-        extend  Plugins
-
-        plugin Plugins::Associations
-        plugin Plugins::Clone
-        plugin Plugins::Descendants
-        plugin Plugins::Equality
-        plugin Plugins::Inspect
-        plugin Plugins::Keys
-        plugin Plugins::Dirty # for now dirty needs to be after keys
-        plugin Plugins::Logger
-        plugin Plugins::Pagination
-        plugin Plugins::Protected
-        plugin Plugins::Rails
-        plugin Plugins::Serialization
-        plugin Plugins::Validations
-        plugin Plugins::Callbacks # for now callbacks needs to be after validations
-        
-        extend Plugins::Validations::DocumentMacros
-      end
-
-      super
+      plugin Plugins::Associations
+      plugin Plugins::Clone
+      plugin Plugins::Descendants
+      plugin Plugins::Equality
+      plugin Plugins::Inspect
+      plugin Plugins::Keys
+      plugin Plugins::Dirty # for now dirty needs to be after keys
+      plugin Plugins::Logger
+      plugin Plugins::Pagination
+      plugin Plugins::Protected
+      plugin Plugins::Rails
+      plugin Plugins::Serialization
+      plugin Plugins::Validations
+      plugin Plugins::Callbacks
+      
+      extend Plugins::Validations::DocumentMacros
     end
 
     module ClassMethods
@@ -350,6 +347,25 @@ module MongoMapper
     end
 
     module InstanceMethods
+      def initialize(attrs={}, from_database=false)
+        unless attrs.nil?
+          provided_keys = attrs.keys.map { |k| k.to_s }
+          unless provided_keys.include?('_id') || provided_keys.include?('id')
+            write_key :_id, Mongo::ObjectID.new
+          end
+        end
+
+        assign_type_if_present
+
+        if from_database
+          @new = false
+          self.attributes = attrs
+        else
+          @new = true
+          assign(attrs)
+        end
+      end
+      
       def collection
         self.class.collection
       end

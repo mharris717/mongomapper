@@ -1,6 +1,8 @@
 module MongoMapper
   module Plugins
     module IdentityMap
+      extend ActiveSupport::Concern
+      
       def self.models
         @models ||= Set.new
       end
@@ -12,7 +14,7 @@ module MongoMapper
       def self.configure(model)
         IdentityMap.models << model
       end
-
+      
       module ClassMethods
         def inherited(descendant)
           descendant.identity_map = identity_map

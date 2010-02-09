@@ -3,8 +3,9 @@ require 'active_support/json'
 module MongoMapper
   module Plugins
     module Serialization
-      def self.configure(model)
-        model.class_eval { include Json }
+      extend ActiveSupport::Concern
+      included do
+        include Json
       end
       
       class Serializer

@@ -1,6 +1,7 @@
 module MongoMapper
   module Plugins
     module Protected
+      extend ActiveSupport::Concern
       module ClassMethods
         def attr_protected(*attrs)
           self.write_inheritable_attribute(:attr_protected, Set.new(attrs) + (protected_attributes || []))
