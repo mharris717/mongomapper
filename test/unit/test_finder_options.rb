@@ -37,7 +37,7 @@ class FinderOptionsTest < Test::Unit::TestCase
       }
     end
     
-    %w{gt lt gte lte ne in nin mod size where exists}.each do |operator|
+    %w{gt lt gte lte ne in nin mod all size where exists}.each do |operator|
       should "convert #{operator} conditions" do
         FinderOptions.new(Room, :age.send(operator) => 21).criteria.should == {
           :age => {"$#{operator}" => 21}
@@ -45,6 +45,12 @@ class FinderOptionsTest < Test::Unit::TestCase
       end
     end
     
+    should "normalize value when using symbol operators" do
+      time = Time.now.in_time_zone('Indiana (East)')
+      criteria = FinderOptions.new(Room, :created_at.gt => time).criteria
+      criteria[:created_at]['$gt'].should be_utc
+    end
+
     should "work with simple criteria" do
       FinderOptions.new(Room, :foo => 'bar').criteria.should == {
         :foo => 'bar'
@@ -325,5 +331,4 @@ class FinderOptionsTest < Test::Unit::TestCase
       }
     end
   end
-  
-end # FinderOptionsTest
+end
