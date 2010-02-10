@@ -19,7 +19,7 @@ require 'support/timing'
 class Test::Unit::TestCase
   include CustomMatchers
 
-  def Doc(name=nil, &block)
+  def Doc(name='Unnamed', &block)
     klass = Class.new do
       include MongoMapper::Document
       set_collection_name "test#{rand(20)}"
@@ -35,7 +35,7 @@ class Test::Unit::TestCase
     klass
   end
 
-  def EDoc(name=nil, &block)
+  def EDoc(name='Unnamed', &block)
     klass = Class.new do
       include MongoMapper::EmbeddedDocument
 

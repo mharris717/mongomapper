@@ -37,9 +37,9 @@ module CustomMatchers
     if expected_message.nil?
       matcher.positive_failure_message = "#{receiver} had no errors on #{attribute}"
       matcher.negative_failure_message = "#{receiver} had errors on #{attribute} #{receiver.errors.inspect}"
-      !receiver.errors.on(attribute).blank?
+      receiver.errors[attribute].size > 0
     else
-      actual = receiver.errors.on(attribute)
+      actual = receiver.errors[attribute].first
       matcher.positive_failure_message = %Q(Expected error on #{attribute} to be "#{expected_message}" but was "#{actual}")
       matcher.negative_failure_message = %Q(Expected error on #{attribute} not to be "#{expected_message}" but was "#{actual}")
       actual == expected_message

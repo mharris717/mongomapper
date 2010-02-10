@@ -11,7 +11,6 @@ module MongoMapper
           :destroy,
           :save,
           :update,
-          :validate,
           :terminator => false
       end
     end

@@ -4,12 +4,28 @@ module MongoMapper
       extend ActiveSupport::Concern
       included do
         include ::ActiveModel::Validations
+        extend FixValidationKeyNames
       end
       
       module DocumentMacros
         # def validates_uniqueness_of(*args)
         #   add_validations(args, MongoMapper::Plugins::Validations::ValidatesUniquenessOf)
         # end
+      end
+      
+      module FixValidationKeyNames
+        def validates_inclusion_of(*args,&b)
+          if args.last.kind_of?(Hash)
+            args.last[:in] ||= args.last[:within]
+          end
+          super(*args,&b)
+        end
+        def validates_exclusion_of(*args,&b)
+          if args.last.kind_of?(Hash)
+            args.last[:in] ||= args.last[:within]
+          end
+          super(*args,&b)
+        end
       end
       
       # class ValidatesUniquenessOf < Validatable::ValidationBase
