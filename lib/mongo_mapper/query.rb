@@ -1,7 +1,6 @@
 module MongoMapper
-  # = Important Note
-  # This class is private to MongoMapper and should not be considered part of
-  # MongoMapper's public API.
+  # IMPORTANT
+  # This class is private to MongoMapper and should not be considered part of MongoMapper's public API.
   #
   class Query
     OptionKeys = [:fields, :select, :skip, :offset, :limit, :sort, :order]
@@ -10,22 +9,9 @@ module MongoMapper
 
     def initialize(model, options)
       raise ArgumentError, "Options must be a hash" unless options.is_a?(Hash)
-
-      @model, @options, @conditions = model, {}, {}
-
-      options.each_pair do |key, value|
-        key = key.respond_to?(:to_sym) ? key.to_sym : key
-
-        if OptionKeys.include?(key)
-          @options[key] = value
-        elsif key == :conditions
-          @conditions.merge!(value)
-        else
-          @conditions[key] = value
-        end
-      end
-
-      add_sci_scope
+      @model, @options, @conditions, @original_options = model, {}, {}, options
+      separate_options_and_conditions
+      add_sci_condition
     end
 
     def criteria
@@ -46,8 +32,22 @@ module MongoMapper
     end
 
     private
+      def separate_options_and_conditions
+        @original_options.each_pair do |key, value|
+          key = key.respond_to?(:to_sym) ? key.to_sym : key
+
+          if OptionKeys.include?(key)
+            @options[key] = value
+          elsif key == :conditions
+            @conditions.update(value)
+          else
+            @conditions[key] = value
+          end
+        end
+      end
+
       # adds _type single collection inheritance scope for models that need it
-      def add_sci_scope
+      def add_sci_condition
         @conditions[:_type] = model.to_s if model.single_collection_inherited?
       end
 
