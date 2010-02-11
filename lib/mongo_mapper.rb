@@ -1,13 +1,13 @@
 require 'set'
 
-# if Gem is defined i'll assume you are using rubygems and lock specific versions
-# call me crazy but a plain old require will just get the latest version you have installed
-# so i want to make sure that if you are using gems you do in fact have the correct versions
-# if there is a better way to do this, please enlighten me!
-if self.class.const_defined?(:Gem)
-  gem 'activesupport', '>= 3.0.pre'
-  gem "activemodel", ">= 3.0.pre"
-  gem "mongo", ">= 0.18.2"
+begin
+  # Require the preresolved locked set of gems.
+  require File.expand_path('../.bundle/environment', __FILE__)
+rescue LoadError
+  # Fallback on doing the resolve at runtime.
+  require "rubygems"
+  require "bundler"
+  Bundler.setup
 end
 
 require 'active_support/hash_with_indifferent_access'
