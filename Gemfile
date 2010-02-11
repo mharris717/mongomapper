@@ -3,6 +3,7 @@ source :gemcutter
 gem 'activesupport', '>= 3.0.0.beta'
 gem "activemodel", ">= 3.0.0.beta"
 gem "mongo", ">= 0.18.2"
+gem "mongo_ext", ">= 0.18.2"
 
 group :test do
   gem 'jnunemaker-matchy', '0.4.0'
