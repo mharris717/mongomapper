@@ -1,6 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../lib/mongo_mapper')
 
 require 'active_support/core_ext/logger'
+require 'active_support/core_ext/module/aliasing'
 
 require 'matchy'
 require 'shoulda'

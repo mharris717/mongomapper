@@ -10,7 +10,6 @@ rescue LoadError
   Bundler.setup
 end
 
-require 'active_support/hash_with_indifferent_access'
 require "active_model"
 require "active_model/callbacks"
 require "active_model/conversion"
@@ -21,6 +20,10 @@ require "active_model/serialization"
 require "active_model/translation"
 require "active_model/validator"
 require "active_model/validations"
+require 'active_support/core_ext/hash/indifferent_access'
+require 'active_support/core_ext/hash'
+require 'active_support/core_ext/object/try'
+require 'active_support/core_ext/module'
 
 require 'mongo'
 
