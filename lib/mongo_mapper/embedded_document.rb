@@ -3,7 +3,7 @@ module MongoMapper
     extend Support::DescendantAppends
     extend ActiveSupport::Concern
     included do
-      extend  Plugins
+      extend Plugins
 
       plugin Plugins::Associations
       plugin Plugins::Clone
@@ -31,6 +31,25 @@ module MongoMapper
     end
 
     module InstanceMethods
+      def initialize(attrs={}, from_database=false)
+        unless attrs.nil?
+          provided_keys = attrs.keys.map { |k| k.to_s }
+          unless provided_keys.include?('_id') || provided_keys.include?('id')
+            write_key :_id, Mongo::ObjectID.new
+          end
+        end
+
+        assign_type_if_present
+
+        if from_database
+          @new = false
+          self.attributes = attrs
+        else
+          @new = true
+          assign(attrs)
+        end
+      end
+      
       def save(options={})
         if result = _root_document.try(:save, options)
           @new = false
