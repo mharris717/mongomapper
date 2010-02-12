@@ -272,8 +272,8 @@ class EmbeddedDocumentTest < Test::Unit::TestCase
         end
 
         should "also be set on many embedded documents" do
-          root  = Doc().new
-          klass = EDoc { many :children }
+          root  = Doc('Root').new
+          klass = EDoc('ed') { many :children }
           doc   = klass.new(:_root_document => root, :children => [{}])
 
           doc.children.first._root_document.should == root

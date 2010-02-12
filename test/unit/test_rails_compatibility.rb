@@ -46,7 +46,7 @@ class TestRailsCompatibility < Test::Unit::TestCase
   
   context "Document" do
     should "implement human_name" do
-      BigStuff.human_name.should == 'Big Stuff'
+      BigStuff.human_name.should == 'Big stuff'
     end
   end
 end

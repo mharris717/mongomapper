@@ -2,7 +2,9 @@ module MongoMapper
   module Plugins
     module Associations
       class EmbeddedCollection < Collection
+      
         def build(attributes={})
+          duts "embeddedcollection build"
           doc = klass.new(attributes)
           assign_references(doc)
           self << doc
@@ -20,6 +22,7 @@ module MongoMapper
         end
 
         def <<(*docs)
+          duts "EmbeddedCollection << #{docs.inspect}"
           load_target
           docs.each do |doc|
             assign_references(doc)
@@ -39,6 +42,7 @@ module MongoMapper
           end
 
           def assign_references(*docs)
+            duts "assign_references"
             docs.each do |doc|
               doc._root_document = _root_document
               doc._parent_document = owner

@@ -1,5 +1,13 @@
 require 'test_helper'
 
+class Foobar
+  include ActiveModel::Serialization
+  include ActiveModel::Serializers::JSON
+  attr_accessor :bar
+  def attributes
+    {:bar => bar}
+  end
+end
 class JsonSerializationTest < Test::Unit::TestCase
   class Tag
     include MongoMapper::EmbeddedDocument
@@ -18,7 +26,7 @@ class JsonSerializationTest < Test::Unit::TestCase
   end
   
   def setup
-    Contact.include_root_in_json = false
+    #Contact.include_root_in_json = false
     @contact = Contact.new(
       :name        => 'Konata Izumi',
       :age         => 16,
@@ -30,7 +38,7 @@ class JsonSerializationTest < Test::Unit::TestCase
   
   should "include demodulized root" do
     Contact.include_root_in_json = true
-    assert_match %r{^\{"contact": \{}, @contact.to_json
+    assert_match %r{^\{"contact":[ ]?\{}, @contact.to_json
   end
   
   should "encode all encodable attributes" do
@@ -118,7 +126,8 @@ class JsonSerializationTest < Test::Unit::TestCase
     end
     
     should "include single method" do
-      json = @contact.to_json(:methods => :label)
+      json = @contact.to_json(:methods => [:label])
+      duts "json",json,3
       assert_match %r{"label":"Has cheezburger"}, json
     end
     
@@ -171,11 +180,43 @@ class JsonSerializationTest < Test::Unit::TestCase
     assert_no_match %r{"2":},            json
   end
   
+  # should 'foobar' do
+  #   f = Foobar.new
+  #   g = Foobar.new
+  #   g.bar = 17
+  #   require 'ostruct'
+  #   proxy = MongoMapper::Plugins::Associations::ManyEmbeddedProxy.new([g],OpenStruct.new(:options => {}))
+  #   proxy.replace([g])
+  #   f.bar = [1,2,3,g,p]
+  #   #raise f.serializable_hash.inspect
+  #   #raise f.serializable_hash.inspect
+  #   raise proxy.inspect
+  #   assert_equal f.serializable_hash[:bar][3].bar, 17
+  #   assert_equal f.serializable_hash[:bar][4].first.bar, 17
+  # end
+  
   should "include embedded attributes" do
+    duts 'before',4
     contact = Contact.new(:name => 'John', :age => 27)
     contact.tags = [Tag.new(:name => 'awesome'), Tag.new(:name => 'ruby')]
+    #contact.tags << Tag.new(:name => 'awesome')
+    #contact.tags << Tag.new(:)
+    #contact.tags.zzz
+    # duts "array to_json",[1,2,3].to_json,'tag json',Tag.new(:name => 'awesome').to_json,
+    # "\ntag array",[Tag.new(:name => 'awesome')],
+    # "\ntag array json",[Tag.new(:name => 'awesome')].to_json,
+    # "\ntag array2       ",[Tag.new(:name => 'awesome'), Tag.new(:name => 'ruby')],
+    # "\ntag array2 json",[Tag.new(:name => 'awesome'), Tag.new(:name => 'ruby')].to_json,
+    # "\ntags method array",contact.tags,
+    # "\ntags method json",contact.tags.to_json,
+    # "\nfirst tag json",contact.tags.first.to_json,
+    # 3
+    # duts "tags",contact.tags.class.to_s,contact.tags.inspect,3
+    # duts 'tags json 1',contact.tags.to_json,3
     json = contact.to_json
+    # duts 'tags json',json,3
     assert_match %r{"tags":}, json
+    duts 'about to fail',4
     assert_match %r{"name":"awesome"}, json
     assert_match %r{"name":"ruby"}, json
   end

@@ -5,26 +5,26 @@ module MongoMapper
     
     included do
       include InstanceMethods
-      extend  Support::Find
+      extend  MongoMapper::Support::Find
       extend  ClassMethods
-      extend  Plugins
+      extend  MongoMapper::Plugins
 
-      plugin Plugins::Associations
-      plugin Plugins::Clone
-      plugin Plugins::Descendants
-      plugin Plugins::Equality
-      plugin Plugins::Inspect
-      plugin Plugins::Keys
-      plugin Plugins::Dirty # for now dirty needs to be after keys
-      plugin Plugins::Logger
-      plugin Plugins::Pagination
-      plugin Plugins::Protected
-      plugin Plugins::Rails
-      plugin Plugins::Serialization
-      plugin Plugins::Validations
-      plugin Plugins::Callbacks
+      plugin MongoMapper::Plugins::Associations
+      plugin MongoMapper::Plugins::Clone
+      plugin MongoMapper::Plugins::Descendants
+      plugin MongoMapper::Plugins::Equality
+      plugin MongoMapper::Plugins::Inspect
+      plugin MongoMapper::Plugins::Keys
+      plugin MongoMapper::Plugins::Dirty # for now dirty needs to be after keys
+      plugin MongoMapper::Plugins::Logger
+      plugin MongoMapper::Plugins::Pagination
+      plugin MongoMapper::Plugins::Protected
+      plugin MongoMapper::Plugins::Rails
+      plugin MongoMapper::Plugins::Serialization
+      plugin MongoMapper::Plugins::Validations
+      plugin MongoMapper::Plugins::Callbacks
       
-      extend Plugins::Validations::DocumentMacros
+      extend MongoMapper::Plugins::Validations::DocumentMacros
     end
 
     module ClassMethods

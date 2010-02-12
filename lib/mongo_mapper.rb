@@ -1,5 +1,13 @@
 require 'set'
 
+class String
+  def start_with?(str)
+    !!(self =~ /^#{str}/) 
+  end
+  def end_with?(str)
+    !!(self =~ /#{str}$/) 
+  end
+end
 # if Gem is defined i'll assume you are using rubygems and lock specific versions
 # call me crazy but a plain old require will just get the latest version you have installed
 # so i want to make sure that if you are using gems you do in fact have the correct versions
@@ -10,7 +18,8 @@ if self.class.const_defined?(:Gem)
   gem "mongo", ">= 0.18.2"
 end
 
-require 'active_support/hash_with_indifferent_access'
+require 'active_support/core_ext/hash'
+require 'active_support/core_ext/string'
 require "active_model"
 require "active_model/callbacks"
 require "active_model/conversion"
@@ -110,6 +119,7 @@ module MongoMapper
   end
 end
 
+include MongoMapper
 require 'mongo_mapper/support'
 require 'mongo_mapper/finder_options'
 require 'mongo_mapper/plugins'

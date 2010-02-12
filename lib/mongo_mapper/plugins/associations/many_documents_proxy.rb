@@ -36,12 +36,17 @@ module MongoMapper
 
         def replace(docs)
           load_target
-          target.map(&:destroy)
+          duts "replace self #{inspect} target #{target} docs #{docs.inspect}"
+          target.each { |x| duts "target row #{x.inspect}" }
+          docs.each { |x| duts "docs row #{x.inspect}" }
+          target.map { |x| x.destroy }
+          docs.each { |x| duts "docs2 row #{x.inspect}" }
           docs.each { |doc| apply_scope(doc).save }
           reset
         end
 
         def <<(*docs)
+          duts "mdp << #{docs.inspect}"
           ensure_owner_saved
           flatten_deeper(docs).each { |doc| apply_scope(doc).save }
           reset

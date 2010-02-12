@@ -19,9 +19,11 @@ module MongoMapper
 
       attr_accessor :_root_document, :_parent_document
     end
+    include Document
 
     module ClassMethods
       def embeddable?
+        duts "ED embeddable?"
         true
       end
 

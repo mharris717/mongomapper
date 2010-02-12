@@ -134,7 +134,10 @@ class ObjectId
     elsif value.is_a?(Mongo::ObjectID)
       value
     else
-      Mongo::ObjectID.from_string(value.to_s)
+      #value = value['data']
+      #value = '4b75c604a4b4bd4b47000005'
+      duts "object_id value",value,5
+      Mongo::ObjectID.from_string(value)
     end
   end
   
@@ -208,8 +211,11 @@ end
 class Mongo::ObjectID
   alias_method :original_to_json, :to_json
   
-  def to_json(options = nil)
+  def to_json(*args)
     %Q("#{to_s}")
+  end
+  def serializable_hash(*args)
+    to_s
   end
 end
 

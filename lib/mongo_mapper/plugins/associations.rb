@@ -78,6 +78,7 @@ module MongoMapper
         end
 
         def get_proxy(association)
+          duts "get_proxy #{association.inspect}\n\n"
           unless proxy = self.instance_variable_get(association.ivar)
             proxy = association.proxy_class.new(self, association)
             self.instance_variable_set(association.ivar, proxy)

@@ -6,7 +6,7 @@ module MongoMapper
         alias :proxy_respond_to? :respond_to?
         alias :proxy_extend :extend
 
-        instance_methods.each { |m| undef_method m unless m =~ /(^__|^nil\?$|^send$|proxy_|^object_id$)/ }
+        instance_methods.each { |m| undef_method m unless m =~ /(^__|^nil\?$|^send$|proxy_|^object_id$|class)/ }
 
         attr_reader :owner, :reflection, :target
 
@@ -17,6 +17,9 @@ module MongoMapper
         delegate :klass, :to => :proxy_reflection
         delegate :options, :to => :proxy_reflection
         delegate :collection, :to => :klass
+        
+
+          
 
         def initialize(owner, reflection)
           @owner, @reflection, @loaded = owner, reflection, false
@@ -72,6 +75,7 @@ module MongoMapper
         end
 
         def send(method, *args)
+          duts "SEND",method,args,3
           if proxy_respond_to?(method)
             super
           else
@@ -87,6 +91,7 @@ module MongoMapper
 
         protected
           def method_missing(method, *args, &block)
+            duts "MM #{method}",'foo',3
             if load_target
               if block_given?
                 target.send(method, *args)  { |*block_args| block.call(*block_args) }

@@ -1,6 +1,7 @@
 require 'test_helper'
 
 module MyPlugin
+  extend ActiveSupport::Concern
   def self.configure(model)
     model.class_eval { attr_accessor :from_configure }
   end

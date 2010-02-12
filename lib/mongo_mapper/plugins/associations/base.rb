@@ -1,3 +1,10 @@
+class Object
+  def tap
+    yield(self)
+    self
+  end
+end
+
 module MongoMapper
   module Plugins
     module Associations
@@ -82,9 +89,10 @@ module MongoMapper
           @ivar ||= "@_#{name}"
         end
 
-        def proxy_class
+        def proxy_class_inner
           @proxy_class ||= begin
             if many?
+              duts "pc klass #{klass} #{klass.embeddable?}"
               if self.klass.embeddable?
                 polymorphic? ? ManyEmbeddedPolymorphicProxy : ManyEmbeddedProxy
               else
@@ -104,6 +112,10 @@ module MongoMapper
               polymorphic? ? BelongsToPolymorphicProxy : BelongsToProxy
             end
           end
+        end
+        
+        def proxy_class
+          proxy_class_inner.tap { |x| duts "proxy_class #{x}" }
         end
 
         private

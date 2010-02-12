@@ -52,6 +52,8 @@ module MongoMapper
         def load(attrs)
           begin
             klass = attrs['_type'].present? ? attrs['_type'].constantize : self
+            duts "keys load attrs #{attrs.inspect} klass #{klass}",2
+            klass.included_modules.each { |x| duts x,2 }
             klass.new(attrs, true)
           rescue NameError
             new(attrs, true)

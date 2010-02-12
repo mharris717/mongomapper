@@ -137,7 +137,7 @@ class DocumentTest < Test::Unit::TestCase
     end
 
     context "root document" do
-      should "set self to the root document on embedded documents" do        
+      should "set self to the root document on embedded documents" do     
         klass = Doc()
         pets = EDoc()
         

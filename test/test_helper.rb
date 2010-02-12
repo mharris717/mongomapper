@@ -15,6 +15,13 @@ require 'pp'
 
 require 'support/custom_matchers'
 require 'support/timing'
+require 'pp'
+def duts(*args)
+  has_iter = (args.last.to_i > 0)
+  iter = has_iter ? args.last : 1
+  args = has_iter ? args[0..-2] : args
+  puts args.map { |x| x.class }.inspect + ' ' + args.map { |x| x.is_a?(String) ? x : x.inspect }.join(" ") if iter == 5
+end
 
 class Test::Unit::TestCase
   include CustomMatchers
@@ -27,6 +34,7 @@ class Test::Unit::TestCase
       if name
         class_eval "def self.name; '#{name}' end"
         class_eval "def self.to_s; '#{name}' end"
+        class_eval "def self.human_name; name; end"
       end
     end
 
@@ -37,11 +45,17 @@ class Test::Unit::TestCase
 
   def EDoc(name='Unnamed', &block)
     klass = Class.new do
+      include MongoMapper::Document
       include MongoMapper::EmbeddedDocument
+      
+      def initfialize(ops={})
+        ops.each { |k,v| send("#{k}=",v) }
+      end
 
       if name
         class_eval "def self.name; '#{name}' end"
         class_eval "def self.to_s; '#{name}' end"
+        class_eval "def self.human_name; name; end"
       end
     end
 
