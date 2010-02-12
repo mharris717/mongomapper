@@ -3,10 +3,16 @@ require 'active_support/json'
 module MongoMapper
   module Plugins
     module Serialization
-      module Json
-        extend ActiveSupport::Concern
+      extend ActiveSupport::Concern
+      
+      included do
         include ActiveModel::Serializers::JSON
+        # Re-include this here otherwise we get run over by ActiveModel serialization
+        include SerializableHash
+        extend FromJson
+      end
 
+      module SerializableHash
         def serializable_hash options={}
           options ||= {}
           unless options[:only]
@@ -30,34 +36,15 @@ module MongoMapper
             end
           end
         end
+      end
 
-=begin
+      module FromJson
         def from_json(json)
           self.attributes = ActiveSupport::JSON.decode(json)
           self
         end
-
-        class JsonSerializer < Serializer
-          def serialize
-            serializable_record.to_json
-          end
-        end
-
-        private
-          def apply_to_json_defaults(options)
-
-          end
-=end
       end
-      
-      module InstanceMethods
-        def self.included(model)
-          model.class_eval do
-            include ActiveModel::Serialization
-            include Json
-          end
-        end
-      end
+
     end
   end
 end
