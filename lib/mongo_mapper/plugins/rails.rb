@@ -37,7 +37,7 @@ module MongoMapper
           keys.keys
         end
         
-        def human_name
+        def human
           self.name.demodulize.titleize
         end
       end

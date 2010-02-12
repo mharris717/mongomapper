@@ -22,7 +22,7 @@ class TestRails < Test::Unit::TestCase
       end
 
       should "implement human_name" do
-        @klass.human_name.should == 'Post'
+        @klass.human.should == 'Post'
       end
     end
     
@@ -81,7 +81,7 @@ class TestRails < Test::Unit::TestCase
       end
 
       should "implement human_name" do
-        @klass.human_name.should == 'Post'
+        @klass.name.should == 'Post'
       end
     end
     
