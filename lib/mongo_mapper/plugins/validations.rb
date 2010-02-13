@@ -32,7 +32,7 @@ module MongoMapper
       class ValidatesUniquenessOf < ActiveModel::EachValidator
         attr_accessor :scope, :allow_blank, :allow_nil, :attributes, :case_sensitive
         def case_sensitive
-          @case_sensitive ||= true
+          @case_sensitive.nil? ? true : @case_sensitive
         end
         
         def initialize(ops)
