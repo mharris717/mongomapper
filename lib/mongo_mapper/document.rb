@@ -5,6 +5,7 @@ module MongoMapper
     
     included do
       include InstanceMethods
+      include ActiveModel::Conversion
       extend  Support::Find
       extend  ClassMethods
       extend  Plugins

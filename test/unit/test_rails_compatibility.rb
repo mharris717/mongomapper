@@ -48,5 +48,10 @@ class TestRailsCompatibility < Test::Unit::TestCase
     should "implement human_name" do
       BigStuff.human.should == 'Big Stuff'
     end
+
+    should "respond to to_model" do
+      big_stuff = BigStuff.new
+      big_stuff.to_model.should == big_stuff
+    end
   end
 end
