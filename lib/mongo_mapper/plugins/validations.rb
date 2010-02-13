@@ -5,6 +5,7 @@ module MongoMapper
       included do
         include ::ActiveModel::Validations
         extend FixValidationKeyNames
+        extend LifecycleValidationMethods
       end
       
       module DocumentMacros
@@ -12,6 +13,8 @@ module MongoMapper
           # add_validations(args, MongoMapper::Plugins::Validations::ValidatesUniquenessOf)
           validates_with ValidatesUniquenessOf, {:attributes => attrs}.merge(ops)
         end
+        
+        
       end
       
       module FixValidationKeyNames
@@ -26,6 +29,15 @@ module MongoMapper
             args.last[:in] ||= args.last[:within]
           end
           super(*args,&b)
+        end
+      end
+      
+      module LifecycleValidationMethods
+        def validate_on_create(name)
+          validate(name, :on => :create)
+        end
+        def validate_on_update(name)
+          validate(name, :on => :update)
         end
       end
 
