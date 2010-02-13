@@ -6,8 +6,8 @@ class CallbacksTest < Test::Unit::TestCase
       @document = Doc do
         key :name, String
         
-        [ :before_validation_on_create, :before_validation_on_update,
-          :before_validation, :after_validation,
+        [ :before_validation, :after_validation,
+          :before_validation_on_create, :before_validation_on_update,
           :before_create,     :after_create, 
           :before_update,     :after_update,
           :before_save,       :after_save,
