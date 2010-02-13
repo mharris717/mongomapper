@@ -18,7 +18,7 @@ class ValidationsTest < Test::Unit::TestCase
       doc = @document.new
       doc.errors.size.should == 0
       doc.save
-      doc.errors.full_messages.should == ["Name can't be empty"]
+      doc.errors.full_messages.should == ["Name can't be blank"]
     end
   end
 
@@ -70,7 +70,7 @@ class ValidationsTest < Test::Unit::TestCase
     should "populate document's errors" do
       @doc.name = nil
       @doc.save
-      @doc.errors.full_messages.should == ["Name can't be empty"]
+      @doc.errors.full_messages.should == ["Name can't be blank"]
     end
   end
   
