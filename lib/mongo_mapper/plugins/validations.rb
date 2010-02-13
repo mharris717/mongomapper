@@ -8,9 +8,10 @@ module MongoMapper
       end
       
       module DocumentMacros
-        # def validates_uniqueness_of(*args)
-        #   add_validations(args, MongoMapper::Plugins::Validations::ValidatesUniquenessOf)
-        # end
+        def validates_uniqueness_of(attrs, ops={})
+          # add_validations(args, MongoMapper::Plugins::Validations::ValidatesUniquenessOf)
+          validates_with ValidatesUniquenessOf, {:attributes => attrs}.merge(ops)
+        end
       end
       
       module FixValidationKeyNames
@@ -27,37 +28,49 @@ module MongoMapper
           super(*args,&b)
         end
       end
+
+      class ValidatesUniquenessOf < ActiveModel::EachValidator
+        attr_accessor :scope, :allow_blank, :allow_nil, :attributes, :case_sensitive
+        def case_sensitive
+          @case_sensitive ||= true
+        end
+        
+        def initialize(ops)
+          ops.each { |k,v| send("#{k}=",v) }
+        end
+        
+        def validate(record)
+          [attributes].flatten.each do |attribute|
+            record.errors.add(*message(record,attribute)) unless valid?(record,attribute)
+          end
+        end
       
-      # class ValidatesUniquenessOf < Validatable::ValidationBase
-      #   option :scope, :case_sensitive
-      #   default :case_sensitive => true
-      # 
-      #   def valid?(instance)
-      #     value = instance[attribute]
-      #     return true if allow_blank && value.blank?
-      #     return true if allow_nil && value.nil?
-      #     base_conditions = case_sensitive ? {self.attribute => value} : {}
-      #     doc = instance.class.first(base_conditions.merge(scope_conditions(instance)).merge(where_conditions(instance)))
-      #     doc.nil? || instance._id == doc._id
-      #   end
-      # 
-      #   def message(instance)
-      #     super || "has already been taken"
-      #   end
-      # 
-      #   def scope_conditions(instance)
-      #     return {} unless scope
-      #     Array(scope).inject({}) do |conditions, key|
-      #       conditions.merge(key => instance[key])
-      #     end
-      #   end
-      # 
-      #   def where_conditions(instance)
-      #     conditions = {}
-      #     conditions[attribute] = /#{instance[attribute].to_s}/i unless case_sensitive
-      #     conditions
-      #   end
-      # end
+        def valid?(instance,attribute)
+          value = instance[attribute]
+          return true if allow_blank && value.blank?
+          return true if allow_nil && value.nil?
+          base_conditions = case_sensitive ? {attribute => value} : {}
+          doc = instance.class.first(base_conditions.merge(scope_conditions(instance)).merge(where_conditions(instance,attribute)))
+          doc.nil? || instance._id == doc._id
+        end
+      
+        def message(instance,attribute)
+          [attribute,"has already been taken"]
+        end
+      
+        def scope_conditions(instance)
+          return {} unless scope
+          Array(scope).inject({}) do |conditions, key|
+            conditions.merge(key => instance[key])
+          end
+        end
+      
+        def where_conditions(instance, attribute)
+          conditions = {}
+          conditions[attribute] = /#{instance[attribute].to_s}/i unless case_sensitive
+          conditions
+        end
+      end
     end
   end
 end
