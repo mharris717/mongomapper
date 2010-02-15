@@ -355,6 +355,11 @@ module MongoMapper
             write_key :_id, Mongo::ObjectID.new
           end
         end
+        
+        #here for ActiveModel compatibility, should do something real with this
+        def destroyed?
+          false
+        end
 
         assign_type_if_present
 
