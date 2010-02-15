@@ -1,10 +1,41 @@
-= MongoMapper
+= MongoMapper (Rails 3 Fork)
 
-Awesome gem for modeling your domain and storing it in mongo.
+== Updated to work on Rails3
+
+=== To Install
+
+This project is a fork of MongoMapper that works with Rails3.  
+
+To use with Rails3 / Bundler, add this to your Gemfile:
+
+  gem "mongo_mapper", :git => 'http://github.com/merbjedi/mongomapper.git', :branch => 'rails3'
+
+Remember to use the 'rails3' branch!
+
+Then run:
+
+  bundle install
+
+
+If not using bundler, you can just clone it to your projects vendor/plugins folder.
+
+
+=== Bugs / Issues
+
+Please report all Rails 3 bugs via the Github Issue tracker associated with this fork (merbjedi/mongomapper).
+
+=== Commit access
+
+Want to make changes? Either fork this repo or just msg me for direct commit access to my fork.
+
+Would greatly appreciate your help. Thanks!
+
+
+== Original README
 
 Releases are tagged on github and released on gemcutter. Master is pushed to whenever I add a patch or a new feature, but I do not release a new gem version each time I push.
 
-== Note on Patches/Pull Requests
+=== Note on Patches/Pull Requests
 
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -12,11 +43,11 @@ Releases are tagged on github and released on gemcutter. Master is pushed to whe
 * Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself in another branch so I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Install
+=== Install
 
  $ gem install mongo_mapper
 
-== Problems or Questions?
+=== Problems or Questions?
 
 Hit up the google group.
 http://groups.google.com/group/mongomapper
@@ -24,6 +55,6 @@ http://groups.google.com/group/mongomapper
 To see if the problem you are having is a verified issue, you can see the MM pivotal tracker project:
 http://www.pivotaltracker.com/projects/33576
 
-== Copyright
+=== Copyright
 
 Copyright (c) 2009 John Nunemaker. See LICENSE for details.
